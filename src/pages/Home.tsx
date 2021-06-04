@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { FlatList } from 'react-native';
+
 import { Header } from '../components/Header';
 import { MyTasksList } from '../components/MyTasksList';
 import { TodoInput } from '../components/TodoInput';
@@ -11,18 +13,36 @@ interface Task {
 }
 
 export function Home() {
-  // const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   function handleAddTask(newTaskTitle: string) {
-    //TODO - add new task if it's not empty
+    const newTask = {
+      id: new Date().getTime(),
+      title: newTaskTitle,
+      done: false,
+    };
+
+    setTasks(oldTasks => [ ...oldTasks, newTask ])
   }
 
   function handleMarkTaskAsDone(id: number) {
-    //TODO - mark task as done if exists
+    let [task] = tasks.filter(item => item.id === id);
+
+    setTasks(oldTasks => 
+      [
+        ...oldTasks.filter(item => item.id !== id),
+        { 
+          ...task,
+          done: !task.done
+        }
+      ]
+    );
+
+    console.log(tasks)
   }
 
   function handleRemoveTask(id: number) {
-    //TODO - remove task from state
+    setTasks(oldState => oldState.filter(item => item.id !== id));
   }
 
   return (
